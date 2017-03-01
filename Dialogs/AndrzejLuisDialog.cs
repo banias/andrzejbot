@@ -4,6 +4,7 @@ using Microsoft.Bot.Builder.Luis;
 using Microsoft.Bot.Builder.Luis.Models;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Bot.Connector;
 
 namespace AndrzejPBot.Dialogs
 {
@@ -15,6 +16,13 @@ namespace AndrzejPBot.Dialogs
     public class AndrzejLuisDialog: LuisDialog<object>
     {
         private static Random _random = new Random();
+
+        protected override async Task MessageReceived(IDialogContext context, IAwaitable<IMessageActivity> result)
+        {            
+            var activity = await result as Activity;
+            activity.RemoveRecipientMention();
+            await base.MessageReceived(context, result);
+        }
 
         [LuisIntent("")]
         public async Task GetRandomLink(IDialogContext context, LuisResult result)
