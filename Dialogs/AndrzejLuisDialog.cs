@@ -23,7 +23,13 @@ namespace AndrzejPBot.Dialogs
             var activity = await result as Activity;
             activity.RemoveRecipientMention();
             Trace.WriteLine($"Message: {activity.Text}");
-            await base.MessageReceived(context, result);
+
+            //Detect mention
+            if (activity.Text.ToLower().Contains("andrzej"))
+            {
+                activity.Text = activity.Text.Replace("andrzej", "");
+                await base.MessageReceived(context, result);
+            }
         }
 
         [LuisIntent("")]
