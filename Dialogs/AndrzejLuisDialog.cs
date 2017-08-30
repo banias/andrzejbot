@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Bot.Connector;
 using System.Diagnostics;
+using System.Linq;
 
 namespace AndrzejPBot.Dialogs
 {
@@ -23,6 +24,8 @@ namespace AndrzejPBot.Dialogs
             var activity = await result as Activity;
             activity.RemoveRecipientMention();
             Trace.WriteLine($"Message: {activity.Text}");
+            var mentiones = activity.GetMentions();
+            Trace.WriteLine($"Mentions: {string.Join(", ", activity.GetMentions().Select(x => $"{x.Mentioned.Name} {x.Type}"))}");
 
             //Detect mention
             if (activity.Text.ToLower().Contains("andrzej"))
