@@ -5,6 +5,7 @@ using Microsoft.Bot.Builder.Luis.Models;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Bot.Connector;
+using System.Diagnostics;
 
 namespace AndrzejPBot.Dialogs
 {
@@ -21,6 +22,7 @@ namespace AndrzejPBot.Dialogs
         {            
             var activity = await result as Activity;
             activity.RemoveRecipientMention();
+            Trace.WriteLine($"Message: {activity.Text}");
             await base.MessageReceived(context, result);
         }
 
