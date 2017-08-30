@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Connector;
 using System.Diagnostics;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace AndrzejPBot.Dialogs
 {
@@ -27,13 +28,22 @@ namespace AndrzejPBot.Dialogs
             var mentiones = activity.GetMentions();
             Trace.WriteLine($"Mentions: {string.Join(", ", activity.GetMentions().Select(x => $"{x.Mentioned.Name} {x.Type}"))}");
 
+            var messageType = GetMessageType(activity.ChannelData as JObject);
+
             //Detect mention
-            if (mentiones.Any(x => x.Mentioned.Name.Equals("andrzej", StringComparison.InvariantCultureIgnoreCase)))
+            if (messageType == "message" && mentiones.Any(x => x.Mentioned.Name.Equals("andrzej", StringComparison.InvariantCultureIgnoreCase)))
             {
                 activity.Text = activity.Text.Replace("andrzej", "");
                 Trace.WriteLine("Mention detected responding...");
                 await base.MessageReceived(context, result);
             }
+        }
+
+        private string GetMessageType(JObject jObject)
+        {
+            if (jObject == null)
+                return null;
+            return jObject.SelectToken("SlackMessage.type").ToString();
         }
 
         [LuisIntent("")]
