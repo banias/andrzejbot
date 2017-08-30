@@ -28,9 +28,10 @@ namespace AndrzejPBot.Dialogs
             Trace.WriteLine($"Mentions: {string.Join(", ", activity.GetMentions().Select(x => $"{x.Mentioned.Name} {x.Type}"))}");
 
             //Detect mention
-            if (activity.Text.ToLower().Contains("andrzej"))
+            if (mentiones.Any(x => x.Mentioned.Name.Equals("andrzej", StringComparison.InvariantCultureIgnoreCase)))
             {
                 activity.Text = activity.Text.Replace("andrzej", "");
+                Trace.WriteLine("Mention detected responding...");
                 await base.MessageReceived(context, result);
             }
         }
